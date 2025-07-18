@@ -47,7 +47,7 @@ class App extends Component {
 
   // adding a lifecycle method in a process of connecting frontend to backend
   componentDidMount = () => {
-    fetch('http://localhost:3001')
+    fetch('https://smart-brain-api-dkfq.onrender.com')
       .then(response => response.json())
       .then(console.log);
   }
@@ -93,7 +93,7 @@ class App extends Component {
     // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
     // this will default to the latest version_id
     //fetch("https://api.clarifai.com/v2/models/face-detection/versions/6dc7e46bc9124c5c8824be4822abe105/outputs", setupClarifaiApi(this.state.input))
-    fetch('http://localhost:3001/imageurl', {
+    fetch('https://smart-brain-api-dkfq.onrender.com/imageurl', {
       method: 'post',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
@@ -103,7 +103,7 @@ class App extends Component {
     .then(response => response.json())
     .then(result => {
         if(result) {
-          fetch('http://localhost:3001/image', {
+          fetch('https://smart-brain-api-dkfq.onrender.com/image', {
             method: 'put',
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify({
