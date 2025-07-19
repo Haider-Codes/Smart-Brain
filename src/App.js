@@ -178,7 +178,7 @@ class App extends Component {
 
   render() {
       return (
-        <div>
+        <div style={{display:'flex', minHeight:'100vh', flexDirection:'column', justifyContent:'flex-start'}}>
           <ParticlesBg className='particles' type='cobweb' bg={true} />
           <Navigation onRouteChange={this.onRouteChange} resetState={this.resetState} isSignedIn={this.state.isSignedIn} />
           {
@@ -199,6 +199,11 @@ class App extends Component {
             </div>
             )  
           }
+          <footer style={{marginTop:'auto'}} className="bg-near-black white-80 pv2-l ph4">
+            <p className="center f6"><span className="dib mr2 mr5-ns">All Rights Reserved ©2025 Syed Haider Raza</span>
+              <a className="link white-80 hover-green" href="mailto:haiderraza786110@gmail.com"><u>Email</u>: Syed Haider Raza</a>
+            </p>
+          </footer>
         </div>
       );    
   }

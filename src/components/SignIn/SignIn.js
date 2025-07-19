@@ -19,7 +19,8 @@ class SignIn extends Component {
         this.setState({signInPassword: event.target.value});
     }
 
-    onSignInSubmit = () => {
+    onSignInSubmit = (event) => {
+        console.log(event);
         fetch('https://smart-brain-api-dkfq.onrender.com/signin', {
             method: 'post',
             headers: {'Content-Type':'application/json'},
@@ -52,6 +53,14 @@ class SignIn extends Component {
         label.innerHTML = e;
     }
 
+    handler = (event)=>{
+        const submit_button = document.getElementById("formSubmit");
+        if(event.key === "Enter") {
+        event.preventDefault();
+        submit_button.click();
+            }
+    }
+
     render() {
         const { onRouteChange } = this.props;
         return(
@@ -66,7 +75,8 @@ class SignIn extends Component {
                                     <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                                            type="email" 
                                            name="email-address"
-                                           onChange={this.onEmailChange}  
+                                           onChange={this.onEmailChange}
+                                           onKeyDown={()=>document.getElementById("email-address").addEventListener("keypress", this.handler)}
                                            id="email-address" />
                                 </div>
                                 <div className="mv3">
@@ -74,12 +84,13 @@ class SignIn extends Component {
                                     <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                            type="password" 
                                            name="password"
-                                           onChange={this.onPasswordChange}  
-                                           id="password " />
+                                           onChange={()=>document.getElementById("password").addEventListener("keypress", this.handler)}
+                                           onKeyDown={this.keyDown}  
+                                           id="password" />
                                 </div>
                             </fieldset>
                             <div className="center">
-                                <input className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" onClick={this.onSignInSubmit} type="submit" value="Sign in" />
+                                <input id="formSubmit" className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" onClick={this.onSignInSubmit} type="submit" value="Sign in" />
                             </div>
                             <div className="lh-copy mt3 center">
                                 <a href="#0" onClick={()=>onRouteChange('register')} className="f6 link dim black db">Sign up/Register</a>
