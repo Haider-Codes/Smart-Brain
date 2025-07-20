@@ -21,6 +21,8 @@ class SignIn extends Component {
 
     onSignInSubmit = (event) => {
         console.log(event);
+        console.log("Email State: ", this.state.signInEmail);
+        console.log("Password State: ", this.state.signInPassword);
         fetch('https://smart-brain-api-dkfq.onrender.com/signin', {
             method: 'post',
             headers: {'Content-Type':'application/json'},
@@ -56,9 +58,9 @@ class SignIn extends Component {
     handler = (event)=>{
         const submit_button = document.getElementById("formSubmit");
         if(event.key === "Enter") {
-        event.preventDefault();
-        submit_button.click();
-            }
+            event.preventDefault();
+            submit_button.click();
+        }
     }
 
     render() {
@@ -84,8 +86,8 @@ class SignIn extends Component {
                                     <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                            type="password" 
                                            name="password"
-                                           onChange={()=>document.getElementById("password").addEventListener("keypress", this.handler)}
-                                           onKeyDown={this.keyDown}  
+                                           onChange={this.onPasswordChange}
+                                           onKeyDown={()=>document.getElementById("password").addEventListener("keypress", this.handler)}  
                                            id="password" />
                                 </div>
                             </fieldset>
