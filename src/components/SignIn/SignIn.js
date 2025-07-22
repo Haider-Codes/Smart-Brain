@@ -23,30 +23,34 @@ class SignIn extends Component {
         console.log(event);
         console.log("Email State: ", this.state.signInEmail);
         console.log("Password State: ", this.state.signInPassword);
-        fetch('https://smart-brain-api-dkfq.onrender.com/signin', {
-            method: 'post',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({
-                email: this.state.signInEmail,
-                password: this.state.signInPassword
+        if(this.state.signInEmail && this.state.signInPassword) {
+            fetch('https://smart-brain-api-dkfq.onrender.com/signin', {
+                method: 'post',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    email: this.state.signInEmail,
+                    password: this.state.signInPassword
+                })
             })
-        })
-        .then(response => response.json())
-        .then(user => {
-            if(user.id) {
-                console.log("User is: ",user);
-                this.props.loadUser(user);
-                this.props.onRouteChange('home');
-            }
-            else {
-                this.onError(user);
-            }
-        })
-        .catch(error => {
-            this.onError(error);
-        })
+            .then(response => response.json())
+            .then(user => {
+                if(user.id) {
+                    console.log("User is: ",user);
+                    this.props.loadUser(user);
+                    this.props.onRouteChange('home');
+                }
+                else {
+                    this.onError(user);
+                }
+            })
+            .catch(error => {
+                this.onError(error);
+            })
+        }
+        else{
+            this.onError("Please enter valid email or password!");
+        }
     }
-
     onError = (e) => {
         const err = document.getElementById("error");
         err.style.display = 'block';
@@ -67,8 +71,8 @@ class SignIn extends Component {
         const { onRouteChange } = this.props;
         return(
             <div className='center w-100'>
-                <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5">
-                    <main className="pa4 black-80 ">
+                <article className="br3 ba dark-gray b--black-10 mv5 w-100 w-50-m w-25-s mw6 shadow-5">
+                    <main className="pa4 black-80">
                         <div className="measure">
                             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                                 <legend className="f3 fw6 ph0 mh0 center">Sign In</legend>

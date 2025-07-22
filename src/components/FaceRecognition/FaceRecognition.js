@@ -6,7 +6,7 @@ const FaceRecognition = ( { imageUrl, box } ) => {
         if(box.length === 0){
             return(
                 <div className='center ma'>
-                <div className='absolute mt2'>
+                <div className='relative mt2'>
                     <img id='inputImage' src={imageUrl} alt='' width='500px' height='auto'/>
                 </div>
             </div>
@@ -14,7 +14,7 @@ const FaceRecognition = ( { imageUrl, box } ) => {
         }
         return(
             <div className='center ma'>
-                <div className='absolute mt2'>
+                <div className='relative mt2'>
                     <img id='inputImage' src={imageUrl} alt='' width='500px' height='auto'/>
                     <FaceBox box={box} />
                 </div>

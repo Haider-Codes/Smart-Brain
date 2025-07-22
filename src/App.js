@@ -87,42 +87,65 @@ class App extends Component {
     })
   }
 
+  onError = (errorMsg) => {
+    const error = document.getElementById("error");
+    error.style.display = 'flex';
+    const msg = document.getElementById("message");
+    msg.innerHTML  = errorMsg;
+  }
+
   onButtonSubmit = () => {
   //  console.log('click');
     this.setState({imageUrl: this.state.input})
     // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
     // this will default to the latest version_id
     //fetch("https://api.clarifai.com/v2/models/face-detection/versions/6dc7e46bc9124c5c8824be4822abe105/outputs", setupClarifaiApi(this.state.input))
-    fetch('https://smart-brain-api-dkfq.onrender.com/imageurl', {
-      method: 'post',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        imageUrl: this.state.input
+    console.log("Image Url is: outside loop", this.state.input)
+    if(this.state.input) {
+      const error = document.getElementById("error");
+      error.style.display = 'none';
+      console.log("Image Url is: inside loop", this.state.input)
+      fetch('http://localhost:3001/imageurl', {
+        method: 'post',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          imageUrl: this.state.input
+        })
       })
-    })
-    .then(response => response.json())
-    .then(result => {
-        if(result) {
-          fetch('https://smart-brain-api-dkfq.onrender.com/image', {
-            method: 'put',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({
-              id: this.state.user.id
+      .then(response => response.json())
+      .then(result => {
+          if(result.status.code === 10000) {
+            console.log("result for rank increment: ", result.status.code);
+            fetch('http://localhost:3001/image', {
+              method: 'put',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({
+                id: this.state.user.id
+              })
             })
-          })
-          .then(result => result.json())
-          .then(data => {
-            console.log(data);
-            console.log('State User First Name', this.state.user.first_name);
-            console.log('State User entries', this.state.user.entries);
-           // this.setState(Object.assign(this.state.user, {entries: count})); // good if updating a single attribute of state user.
-            this.loadUser(data);
-           })
-        }
-        this.displayFaceBox(this.calculateFaceLocation2(result)); 
-    })
-    .catch(error => console.log('error', error));
+            .then(result => result.json())
+            .then(data => {
+              console.log(data);
+              console.log('State User First Name', this.state.user.first_name);
+              console.log('State User entries', this.state.user.entries);
+            // this.setState(Object.assign(this.state.user, {entries: count})); // good if updating a single attribute of state user.
+              this.loadUser(data);
+            })
+            this.displayFaceBox(this.calculateFaceLocation2(result)); 
+          }
+          else {
+            this.onError("Unable to process the image. Please ensure the Image Url is in proper format(JPG/JPEG/PNG)");
+          }  
+      })
+      .catch(error => {
+        console.log("error is: ", error);
+        this.onError(error);
+      });
   }
+  else {
+    this.onError("Please enter the Url");
+  }
+}
 
   // // Used for Single Face Detection
   // calculateFaceLocation = (topRow, leftCol, bottomRow, rightCol) => {
@@ -178,7 +201,7 @@ class App extends Component {
 
   render() {
       return (
-        <div style={{display:'flex', minHeight:'100vh', flexDirection:'column', justifyContent:'flex-start'}}>
+        <div style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
           <ParticlesBg className='particles' type='cobweb' bg={true} />
           <Navigation onRouteChange={this.onRouteChange} resetState={this.resetState} isSignedIn={this.state.isSignedIn} />
           {
@@ -187,7 +210,7 @@ class App extends Component {
           :(
             this.state.route === 'register'
             ?<Register onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
-            :<div>
+            :<div style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
               <Logo />
               <Rank name={this.state.user.first_name} entries={this.state.user.entries}/>
               <ImageLinkForm 
@@ -197,9 +220,9 @@ class App extends Component {
                 <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
               </ErrorBoundary>
             </div>
-            )  
+            )
           }
-          <footer style={{marginTop:'auto'}} className="bg-near-black white-80 pv2-l ph4">
+          <footer style={{marginTop: 'auto'}} className="bg-near-black w-100 white-80 pv2-l ph4">
             <p className="center f6"><span className="dib mr2 mr5-ns">All Rights Reserved ©2025 Syed Haider Raza</span>
               <a className="link white-80 hover-green" href="mailto:haiderraza786110@gmail.com"><u>Email</u>: Syed Haider Raza</a>
             </p>
