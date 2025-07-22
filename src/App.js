@@ -105,7 +105,7 @@ class App extends Component {
       const error = document.getElementById("error");
       error.style.display = 'none';
       console.log("Image Url is: inside loop", this.state.input)
-      fetch('http://localhost:3001/imageurl', {
+      fetch('smart-brain-api-dkfq.onrender.com/imageurl', {
         method: 'post',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
@@ -116,7 +116,7 @@ class App extends Component {
       .then(result => {
           if(result.status.code === 10000) {
             console.log("result for rank increment: ", result.status.code);
-            fetch('http://localhost:3001/image', {
+            fetch('smart-brain-api-dkfq.onrender.com/image', {
               method: 'put',
               headers: {'Content-Type':'application/json'},
               body: JSON.stringify({
