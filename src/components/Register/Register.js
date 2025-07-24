@@ -30,25 +30,57 @@ class Register extends Component {
     }
 
     onRegisterSubmit = () => {
-        fetch('https://smart-brain-api-dkfq.onrender.com/register', {
-            method: 'post',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email,
-                password: this.state.password
+        // adding validations
+        if(!this.state.first_name.trim()) {
+            this.onError("first-name-error");
+        }
+        else if(!this.state.last_name.trim()) {
+            document.getElementById("first-name-error").style.display = "none";
+            this.onError("last-name-error");
+        }
+        else if(!(this.state.email.trim() && this.state.email.includes("@"))) {
+            document.getElementById("last-name-error").style.display = "none";
+            this.onError("email-error");
+        }
+        else if(!(this.state.password.trim() && (this.state.password.length >= 8) && (this.state.password.search(/[A-Z]/) !== -1) 
+        && (this.state.password.search(/[A-Z]/) !== -1) && (this.state.password.search(/[a-z]/) !== -1) && (this.state.password.search(/[0-9]/) !== -1)) ) {
+            document.getElementById("email-error").style.display = "none";
+            this.onError("password-error");
+        }
+        else {
+        //    document.getElementById("password-error").style.display = "none";
+            fetch('https://smart-brain-api-dkfq.onrender.com/register', {
+                method: 'post',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    first_name: this.state.first_name,
+                    last_name: this.state.last_name,
+                    email: this.state.email,
+                    password: this.state.password
+                })
             })
-        })
-        .then(response => response.json())
-        .then(user => {
-            if(user.email === this.state.email) {
-            //    console.log("User is: ", user);
-                this.props.loadUser(user);
-                this.props.onRouteChange('home');
-            }
-        })
-        .catch(error => console.log("Error is", error));
+            .then(response => response.json())
+            .then(user => {
+                if(user.email === this.state.email) {
+                //    console.log("User is: ", user);
+                    this.props.loadUser(user);
+                    this.props.onRouteChange('home');
+                }
+            })
+            .catch(error => console.log("Error is", error));
+        }
+    }
+    onError = (e) => {
+        const error = document.getElementById(e);
+        error.style.display = "inline";
+    }
+
+    handler = (e) => {
+        const reg_submit = document.getElementById("submit");
+        if(e.key === "Enter") {
+            e.preventDefault();
+            reg_submit.click();
+        }
     }
 
     render() {
@@ -64,8 +96,12 @@ class Register extends Component {
                                     <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                            type="text" 
                                            name="first-name"
-                                           onChange={this.onFirstNameChange}  
+                                           onChange={this.onFirstNameChange} 
+                                           onKeyDown={()=> document.getElementById("first-name").addEventListener("keypress", this.handler)} 
                                            id="first-name" />
+                                    <span id="first-name-error" style={{display: 'none'}} >
+                                        <p className="center f5 red fw6">First Name is required!</p>    
+                                    </span>
                                 </div>
                                 <div className="mt3">
                                     <label className="db fw6 lh-copy f6" htmlFor="last-name">Last Name</label>
@@ -73,7 +109,11 @@ class Register extends Component {
                                            type="text" 
                                            name="last-name"
                                            onChange={this.onLastNameChange}  
+                                           onKeyDown={()=> document.getElementById("last-name").addEventListener("keypress", this.handler)}
                                            id="last-name" />
+                                    <span id="last-name-error" style={{display: 'none'}}>
+                                        <p className="center f5 red fw6">Last Name is required!</p>    
+                                    </span>
                                 </div>
                                 <div className="mt3">
                                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email Id</label>
@@ -81,7 +121,11 @@ class Register extends Component {
                                            type="email" 
                                            name="email-address"
                                            onChange={this.onEmailChange}  
+                                           onKeyDown={()=> document.getElementById("email-address").addEventListener("keypress", this.handler)}
                                            id="email-address" />
+                                    <span id="email-error" style={{display: 'none'}}>
+                                        <p className="center f5 red fw6">Please enter a valid email</p>    
+                                    </span>
                                 </div>
                                 <div className="mv3">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
@@ -89,11 +133,15 @@ class Register extends Component {
                                            type="password" 
                                            name="password"
                                            onChange={this.onPasswordChange}  
-                                           id="password " />
+                                           onKeyDown={()=> document.getElementById("password").addEventListener("keypress", this.handler)}
+                                           id="password" />
+                                    <span id="password-error" style={{display: 'none'}}>
+                                        <p className="center f5 red fw6">Password should comprise of minimum 8 characters</p>    
+                                    </span>
                                 </div>
                             </fieldset>
                             <div className="center">
-                                <input className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" onClick={this.onRegisterSubmit} type="submit" value="Register" />
+                                <input id="submit" className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" onClick={this.onRegisterSubmit} type="submit" value="Register" />
                             </div>
                         </div>
                     </main>
