@@ -1,5 +1,6 @@
 import { React, Component } from 'react';
-
+import { HiEye } from 'react-icons/hi';
+import { HiEyeOff } from 'react-icons/hi';
 // converting SignIn component into a smart component (basically converting it from React Hook to React Class with states)
 class SignIn extends Component {
 
@@ -7,7 +8,8 @@ class SignIn extends Component {
         super(props);
         this.state = {
             signInEmail: '',
-            signInPassword: ''
+            signInPassword: '',
+            showPassword: false
         };
     }
 
@@ -87,12 +89,29 @@ class SignIn extends Component {
                                 </div>
                                 <div className="mv3">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                                    <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                                           type="password" 
-                                           name="password"
-                                           onChange={this.onPasswordChange}
-                                           onKeyDown={()=>document.getElementById("password").addEventListener("keypress", this.handler)}  
-                                           id="password" />
+                                    <div className="center relative">
+                                        <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+                                            type={this.state.showPassword === true ? "text" : "password"} 
+                                            name="password"
+                                            onChange={this.onPasswordChange}
+                                            onKeyDown={()=>document.getElementById("password").addEventListener("keypress", this.handler)}  
+                                            id="password" />
+                                        {
+                                            this.state.showPassword === false
+                                            ?
+                                            (                                                
+                                            <span className="eye-icon" onClick={()=>{this.setState({showPassword: true})}}>
+                                                <HiEye />
+                                            </span>    
+                                            )
+                                            :
+                                            (
+                                            <span className="eye-icon" onClick={()=>{this.setState({showPassword: false})}}>
+                                                <HiEyeOff />
+                                            </span>
+                                            )
+                                        }
+                                    </div>
                                 </div>
                             </fieldset>
                             <div className="center">

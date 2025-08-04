@@ -1,4 +1,5 @@
 import { React, Component } from 'react';
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 // converting Register.js to a smart component (Very similar to what we did in Signin component)
 
 class Register extends Component {
@@ -9,7 +10,8 @@ class Register extends Component {
             first_name: '',
             last_name: '',
             email: '',
-            password: ''
+            password: '',
+            showPassword: false
         };
     }
 
@@ -39,11 +41,14 @@ class Register extends Component {
             this.onError("last-name-error");
         }
         else if(!(this.state.email.trim() && this.state.email.includes("@"))) {
+            document.getElementById("first-name-error").style.display = "none";
             document.getElementById("last-name-error").style.display = "none";
             this.onError("email-error");
         }
         else if(!(this.state.password.trim() && (this.state.password.length >= 8) && (this.state.password.search(/[A-Z]/) !== -1) 
         && (this.state.password.search(/[A-Z]/) !== -1) && (this.state.password.search(/[a-z]/) !== -1) && (this.state.password.search(/[0-9]/) !== -1)) ) {
+            document.getElementById("first-name-error").style.display = "none";
+            document.getElementById("last-name-error").style.display = "none";
             document.getElementById("email-error").style.display = "none";
             this.onError("password-error");
         }
@@ -129,12 +134,29 @@ class Register extends Component {
                                 </div>
                                 <div className="mv3">
                                     <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                                    <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
-                                           type="password" 
-                                           name="password"
-                                           onChange={this.onPasswordChange}  
-                                           onKeyDown={()=> document.getElementById("password").addEventListener("keypress", this.handler)}
-                                           id="password" />
+                                    <div className="center relative">
+                                        <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+                                            type={this.state.showPassword === true ? "text" : "password"} 
+                                            name="password"
+                                            onChange={this.onPasswordChange}  
+                                            onKeyDown={()=> document.getElementById("password").addEventListener("keypress", this.handler)}
+                                            id="password" />
+                                            {
+                                                this.state.showPassword === false
+                                                ?
+                                                (                                                
+                                                <span className="eye-icon" onClick={()=>{this.setState({showPassword: true})}}>
+                                                    <HiEye />
+                                                </span>    
+                                                )
+                                                :
+                                                (
+                                                <span className="eye-icon" onClick={()=>{this.setState({showPassword: false})}}>
+                                                    <HiEyeOff />
+                                                </span>
+                                                )
+                                            }
+                                    </div>
                                     <span id="password-error" style={{display: 'none'}}>
                                         <p className="center f5 red fw6">Password should comprise of minimum 8 characters</p>    
                                     </span>
